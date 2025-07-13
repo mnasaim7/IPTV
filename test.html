@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Data Fetcher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            border-radius: 8px;
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #4CAF50;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        #fetchButton {
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #fetchButton:hover {
+            background-color: #45a049;
+        }
+
+        #response {
+            margin-top: 30px;
+            display: none;
+            text-align: left;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        #loadingMessage {
+            color: #007bff;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        pre {
+            background-color: #282c34;
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 14px;
+            margin-top: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .error-message {
+            color: #ff4d4d;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>API Data Fetcher</h1>
+        <p>Click the button below to fetch data from the API.</p>
+        <button id="fetchButton">Fetch Data</button>
+
+        <div id="response">
+            <p id="loadingMessage" style="display:none;">Loading...</p>
+            <pre id="jsonResponse"></pre>
+            <p id="errorMessage" class="error-message" style="display:none;"></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('fetchButton').addEventListener('click', function() {
+            // Show loading message
+            document.getElementById('loadingMessage').style.display = 'inline';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('response').style.display = 'none';
+
+            // Define the API endpoint and Bearer Token
+            const apiUrl = 'https://airlinknetwork.zima.cloud/api/subscribers/expiry';  // Replace with your actual API URL
+            const bearerToken = 'irVt1f9ROtUh1BDRzPDDo6SQmhVBDm2T';  // Use your actual Bearer Token
+            
+            // Make the API request
+            fetch(apiUrl, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + bearerToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Hide loading message and display the response
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.getElementById('response').style.display = 'block';
+                document.getElementById('jsonResponse').textContent = JSON.stringify(data, null, 4);
+            })
+            .catch(error => {
+                // Hide loading message and display error message
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.getElementById('response').style.display = 'block';
+                document.getElementById('errorMessage').style.display = 'inline';
+                document.getElementById('errorMessage').textContent = 'Error: ' + error.message;
+            });
+        });
+    </script>
+
+</body>
+</html>
